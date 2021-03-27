@@ -29,7 +29,7 @@ enum lis{
 
 
 //% weight=100 color=#0fbc11 icon="\uf1eb" block="ホームネットワーク"
-//% groups="['LAN', 'SERVER','LAN&SERVER']"
+//% groups="['LAN', 'MONITOR','SET_DATA']"
 namespace IP_NETWORK {
  
     let receivedtoip = 0
@@ -143,6 +143,7 @@ namespace IP_NETWORK {
     }
     /**
      * TODO:受信したIPアドレス宛にメッセージを返す。
+     * @param t 送信する文字列　,eg:"Hello!"
    　
      */
     //%weight=89
@@ -306,7 +307,7 @@ export function　rep(t : string ="OK"):void{
     //% DATA.defl=receivedtext
     //% draggableParameters="reporter"
      //% block="サーバーに登録されている　$n　番目のデータをリクエスト"
-    export function askdata(n:lis):void{ 
+     function askdata(n:lis):void{ 
         let zero = 0
         radio.sendNumber(zero)
         makestring =""+ convertToText(myipaddress)+"REQUESTDATA:"+""+ convertToText(n);
@@ -451,8 +452,8 @@ export function　rep(t : string ="OK"):void{
    　
      */
     //%weight=60
-    //% group="SERVER"
-    //% block="グループ番号$n、192.168.0.0　のサーバーになる"
+    //% group="MONITOR"
+    //% block="グループ番号$n のメッセージの流れを監視する"
     //% n.min=1 n.max=99 n.defl=1
     export function server(n:number){
         radio.setGroup(n)
@@ -545,7 +546,7 @@ export function　rep(t : string ="OK"):void{
      * TODO: リクエストがあったらこの中のブロックのデータを自動的に返信する"
      */
     //%weight=100
-    //% group="LAN&SERVER"
+    //% group="SET_DATA"
     //% block="リクエストがあったらこのブロック内に登録したデータを自動的に返信する"
     export function iot(handler:()=>void){
         initHandler = handler
@@ -555,7 +556,7 @@ export function　rep(t : string ="OK"):void{
      * TODO:番号と対応するデータを登録　
      */
     //%weight=80
-    //% group="LAN&SERVER"
+    //% group="SET_DATA"
     //% block=" $n　番目に数字データ　%mをセット"
     export function  setdata(n:lis,m:number){
         list[n] = convertToText(m)
@@ -568,7 +569,7 @@ export function　rep(t : string ="OK"):void{
      * TODO:番号と対応するメッセージを登録　
      */
     //%weight=90
-    //% group="LAN&SERVER"
+    //% group="SET_DATA"
     //% block=" $n　番目にメッセージデータ　$s（15文字までの英数字）をセット"
     export function  setdatastr(n:lis,s:string){
         list[n] = s
@@ -587,7 +588,7 @@ export function　rep(t : string ="OK"):void{
    　
      */
     //%weight=50
-    //% group="SERVER"
+    //% group="MONITOR"
     //% block="グループ内でメッセージのやり取りがあったら"
     
     export function onserver(handler:()=>void){
@@ -601,7 +602,7 @@ export function　rep(t : string ="OK"):void{
    　
      */
     //%weight=40
-    //% group="SERVER"
+    //% group="MONITOR"
     //% block="送出元IPアドレス to 宛先IPアドレス+文字列"
     export function  receivedmessage():string　{ 
         let receivedmessage:string;
@@ -621,7 +622,7 @@ export function　rep(t : string ="OK"):void{
    　
      */
     //%weight=40
-    //% group="SERVER"
+    //% group="MONITOR"
     //% block="IPアドレス+メッセージの内容の文字列をシリアル通信で出力"
     export function  messagetoserial():void　{ 
        let receivedmessage:string;
